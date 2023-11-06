@@ -189,13 +189,6 @@ namespace Lab_Statistic
             s = Math.Round(s, 4);
             return s;
         }
-      /*  public static double Chsi_cryt_y(double[][] p, double My)
-        {
-            double chsi2;
-            for(int i =0; i< My; i++)
-            {
 
-            }
-        }*/
     }
 }

@@ -21,7 +21,7 @@ namespace Lab_Statistic
                 oldarray.CopyTo(array);
                 Array.Sort(array);
                 Fdistrib.ChartType = SeriesChartType.Point;
-                Fdistrib.Color = Color.Indigo;
+                Fdistrib.Color = Color.Gray;
                 double k = 0;
                 //  int remarkcount;
 
@@ -38,8 +38,8 @@ namespace Lab_Statistic
         {
             Sample sample1 = SampleManager.samples[index1];
             Sample sample2 = SampleManager.samples[index2];
-            int N1 = sample1.Data.Count;
-            int N2 = sample2.Data.Count;
+            int N1 = sample1.N;
+            int N2 = sample2.N;
             int N;
             if (N1 < N2)
                 N = N1;
@@ -89,6 +89,32 @@ namespace Lab_Statistic
                 }
             }
             return p;
+        }
+        public static double[][] Pij_(int index1, int index2, double r)
+        {
+            Sample sample1 = SampleManager.samples[index1];
+            Sample sample2 = SampleManager.samples[index2];
+            (int m1, double h1) = M_H.m_h(index1);
+            (int m2, double h2) = M_H.m_h(index2);
+            double aver_x = sample1.s_charac.average;
+            double aver_y = sample2.s_charac.average;
+            double sx = sample1.s_charac.rms;
+            double sy = sample2.s_charac.rms;
+            double[][] fxy = new double [m1][];
+
+            double[][] p_ = new double[m1][] ;
+            for (int i = 0; i < m1; i++)
+            {
+                fxy[i] = new double[m2];
+                p_[i] = new double[m2];
+                for (int j = 0; j < m2; j++)
+                {
+
+                    fxy[i][j] = Reproduction.NormalDistribution(sample1.Min + h1 * (i + 0.5), aver_x, aver_y, sample2.Min + h2 * (j + 0.5), sx, sy, r);
+                    p_[i][j] =  fxy[i][j] * h1 * h2;
+                }
+            }
+            return p_;
         }
         public class PointD
         {
@@ -249,83 +275,6 @@ namespace Lab_Statistic
             }
         }
 
-        /*   public static void fxy_2D_(Chart chart, int index1, int index2)
-           {
-               Sample sample1 = SampleManager.samples[index1];
-               Sample sample2 = SampleManager.samples[index2];
-               int N1 = sample1.Data.Count;
-               int N2 = sample2.Data.Count;
-
-               (int m1, double h1) = M_H.m_h(index1);
-               (int m2, double h2) = M_H.m_h(index2);
-
-               if (chart.Series.Count > 0)
-                   chart.Series[0].Points.Clear();
-               chart.ChartAreas[0].AxisX.Interval = Math.Round(h1, 2);
-               chart.ChartAreas[0].AxisY.Interval = Math.Round(h2, 2);
-
-               List<PointD> points = new List<PointD>();
-
-               for (int i = 0; i < N1; i++)
-               {
-                   points.Add(new PointD(sample1.Data[i], sample2.Data[i]));
-               }
-
-               double[][] p = new double[m1][];
-
-               for (int i = 0; i < m1; i++)
-               {
-                   p[i] = new double[m2];
-
-                   List<PointD> remarkX;
-                   if (i == m1 - 1)
-                   {
-                       remarkX = points.FindAll(rem => rem.X <= (sample1.Min + h1 * (i + 1) + 0.000001) && rem.X >= (i * h1 + sample1.Min));
-                   }
-                   else
-                   {
-                       remarkX = points.FindAll(rem => rem.X < (sample1.Min + h1 * (i + 1)) && rem.X >= (i * h1 + sample1.Min));
-                   }
-
-                   for (int j = 0; j < m2; j++)
-                   {
-                       List<PointD> remarkY;
-                       if (j == m2 - 1)
-                       {
-                           remarkY = remarkX.FindAll(rem => rem.Y <= (sample2.Min + h2 * (j + 1) + 0.000001) && rem.Y >= (j * h2 + sample2.Min));
-                       }
-                       else
-                       {
-                           remarkY = remarkX.FindAll(rem => rem.Y < (sample2.Min + h2 * (j + 1)) && rem.Y >= (j * h2 + sample2.Min));
-                       }
-
-                       double remarkcount = remarkY.Count;
-                       p[i][j] = (double)remarkcount / (N1 + N2);
-
-                       // Розрахунок розміру прямокутника
-                       double rectangleWidth = h1;
-                       double rectangleHeight = h2;
-
-                       // Отримання кольору відповідно до щільності
-                       int alpha = (int)(255 * p[i][j]);
-                       Color rectColor = Color.FromArgb(alpha, 0, 0, 0);
-
-                       // Визначення координат для прямокутника
-                       float x = (float)(sample1.Min + h1 * i);
-                       float y = (float)(sample2.Min + h2 * j);
-
-                       // Малювання прямокутника з встановленим кольором
-                       using (Graphics g = chart.CreateGraphics())
-                       {
-                           using (Brush brush = new SolidBrush(rectColor))
-                           {
-                               g.FillRectangle(brush, x, y, (float)rectangleWidth, (float)rectangleHeight);
-                           }
-                       }
-                   }
-               }
-           }
-        */
 
 
 
@@ -347,7 +296,7 @@ namespace Lab_Statistic
                 histogram.ChartType = SeriesChartType.Column;
                 histogram.BorderWidth = 1;
                 histogram.BorderColor = Color.Black;
-                histogram.Color = Color.Indigo;
+                histogram.Color = Color.Gray;
                 //   double max = array.Max();
                 double min = array.Min();
                 int count = array.Count;
@@ -378,6 +327,7 @@ namespace Lab_Statistic
         {
             fdistclas.ChartType = SeriesChartType.Point;
             fdistclas.Color = Color.Black;
+            fdistclas.MarkerStyle = MarkerStyle.Circle;
             fdistclas.BorderWidth = 1;
             int count = array.Count;
             int remarkcount = 0;
@@ -390,21 +340,22 @@ namespace Lab_Statistic
                 if (i == m - 1)
                 {
                     remark = array.FindAll(rem => rem <= (min + h * (i + 1) + 0.000001) & rem >= (i * h + min));
-                    p = 200;
+                    p = 100;
                 }
                 else
                 {
                     remark = array.FindAll(rem => rem < (min + h * (i + 1)) & rem >= (i * h + min));
-                    p = 100;
+                    p = 50;
                 }
                 remarkcount = remark.Count;
                 k = (double)remarkcount / count + k;
                 fdistclas.Points.AddXY(min + h * i, k);
                 for (int j = 1; j < p - 2; j++)
                 {
-                    double v = min + h * (i + (double)j / 100);
+                    double v = min + h * (i + (double)j / 50);
                     fdistclas.Points.AddXY(v, k);
                 }
+
                 //   i = i + h;
             }
             // MessageBox.Show(fdistclas.Points[1].ToString());
@@ -472,9 +423,14 @@ namespace Lab_Statistic
           //  s.Color = Color.Yellow; 
             Sample sample1 = SampleManager.samples[index1];
             Sample sample2 = SampleManager.samples[index2];
-            int N = sample1.Data.Count();
-
-           // Series s = new Series();
+            int N1 = sample1.N;
+            int N2 = sample2.N;
+            int N;
+            if (N1 < N2)
+                N = N1;
+            else
+                N = N2;
+            // Series s = new Series();
             s.ChartType = SeriesChartType.Point;
             s.MarkerStyle = MarkerStyle.Cross; 
             s.BorderWidth = 4;

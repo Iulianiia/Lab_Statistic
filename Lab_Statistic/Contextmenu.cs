@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,12 +8,18 @@ using System.Windows.Forms;
 
 namespace Lab_Statistic
 {
-    public class ContextMenu : Form1
+    public class ContextMenu1
     {
         private ContextMenuStrip contextMenu;
         private Button button;
+        public event EventHandler MenuItemClicked;
 
-        public ContextMenu(Button button)
+      public static List<double> Standartarray;
+      public static List<double> Logarray;
+      public static List<double> WithoutAnom;
+      public static int ind = 0;
+      public static double w;
+        public ContextMenu1(Button button)
         {
             this.button = button;
             InitializeContextMenu();
@@ -48,43 +55,34 @@ namespace Lab_Statistic
 
         private void MenuItem_Click1(object sender, EventArgs e)
         {
-           List<double> Standartarray = Transformation.standartization(SampleManager.samples[SampleManager.now_index].Data,
-                 SampleManager.samples[SampleManager.now_index].N, SampleManager.samples[SampleManager.now_index].s_charac.average, SampleManager.samples[SampleManager.now_index].s_charac.rms);
-           
-            
-            int index = SampleManager.i - 1;
-            SampleManager.AddSample(Standartarray, SampleManager.samples[SampleManager.now_index].W);
-            panel1.Controls.Add(SampleManager.samples[index].panel);
-            SampleManager.samples[index].SampleClicked += Sample_Clicked;
-            SampleManager.samples[index].PanelClicked += Panel_Clicked; ;
-
+                Standartarray = Transformation.standartization(SampleManager.samples[SampleManager.now_index].Data,
+                SampleManager.samples[SampleManager.now_index].N, SampleManager.samples[SampleManager.now_index].s_charac.average, SampleManager.samples[SampleManager.now_index].s_charac.rms);
+                ind = 1;
+                w = -1;
+                MenuItemClicked?.Invoke(this, EventArgs.Empty);
 
         }
 
         private void MenuItem_Click2(object sender, EventArgs e)
         {
-            List<double> Logarray = Transformation.logarif(SampleManager.samples[SampleManager.now_index].Data, SampleManager.samples[SampleManager.now_index].N);
+                Logarray = Transformation.logarif(SampleManager.samples[SampleManager.now_index].Data, SampleManager.samples[SampleManager.now_index].N);
+                ind = 2;
+                w = 0;
+                MenuItemClicked?.Invoke(this, EventArgs.Empty);
 
 
-            int index = SampleManager.i - 1;
-            SampleManager.AddSample(Logarray, SampleManager.samples[SampleManager.now_index].W);
-            panel1.Controls.Add(SampleManager.samples[index].panel);
-            SampleManager.samples[index].SampleClicked += Sample_Clicked;
-            SampleManager.samples[index].PanelClicked += Panel_Clicked; 
         }
 
         private void MenuItem_Click3(object sender, EventArgs e)
         {
-            List<double> WithoutAnom = Transformation.clearAnomal(SampleManager.samples[SampleManager.now_index].Data,
-                  SampleManager.samples[SampleManager.now_index].N, SampleManager.samples[SampleManager.now_index].s_charac.average, 
-                  SampleManager.samples[SampleManager.now_index].s_charac.rms, SampleManager.samples[SampleManager.now_index].s_charac.ckurt_coef);
 
+                WithoutAnom = Transformation.clearAnomal(SampleManager.samples[SampleManager.now_index].Data,
+                      SampleManager.samples[SampleManager.now_index].N, SampleManager.samples[SampleManager.now_index].s_charac.average,
+                      SampleManager.samples[SampleManager.now_index].s_charac.rms, SampleManager.samples[SampleManager.now_index].s_charac.ckurt_coef);
+                ind = 3;
+                w = SampleManager.samples[SampleManager.now_index].W;
+                MenuItemClicked?.Invoke(this, EventArgs.Empty);
 
-            int index = SampleManager.i - 1;
-            SampleManager.AddSample(WithoutAnom , SampleManager.samples[SampleManager.now_index].W);
-            panel1.Controls.Add(SampleManager.samples[index].panel);
-            SampleManager.samples[index].SampleClicked += Sample_Clicked;
-            SampleManager.samples[index].PanelClicked += Panel_Clicked;
         }
     }
 }

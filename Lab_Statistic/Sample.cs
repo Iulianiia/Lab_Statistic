@@ -21,15 +21,7 @@ namespace Lab_Statistic
         public int LInd { get; set; }
         public int AInd { get; set; }
 
-        public class Transformed_sample
-        {
-            public  List<double> Standartarray { get; set; }
-            public List<double> Logarray { get; set; }
-            public List<double> WithoutAnom { get; set; }
-            public List<double> NativeSample { get;  set; }
 
-
-        }
 
         public  class Characteristics 
         {
@@ -48,7 +40,6 @@ namespace Lab_Statistic
 
         }
         public Characteristics s_charac { get; private set; }
-        public Transformed_sample s_transf { get;  set; }
 
         public List<double> Data { get;  set; }
         public double W { get; private set; }
@@ -56,14 +47,12 @@ namespace Lab_Statistic
         public int N { get; private set; }
         public double Max { get; set; }
         public double Min { get; set; }
+        public string Ind { get; set; }
 
-        public Sample(List<double> data, double w, string name)
+        public Sample(List<double> data, double w, string ind,string name)
         {
-            Transformed_sample transformed_Sample = new Transformed_sample();
             Characteristics characteristics = new Characteristics();
             s_charac = characteristics;
-            s_transf = transformed_Sample;
-            transformed_Sample.NativeSample = data;
 
 
             Data = data;
@@ -71,14 +60,15 @@ namespace Lab_Statistic
             Name = name;
             N = data.Count;
             Max = data.Max();
-            Min = data.Min(); 
+            Min = data.Min();
+            Ind = ind;
 
             // Ініціалізація контролів (кнопки, панелі і т. д.) і додавання обробника кліку
             button = new Button();
             table = new TableLayoutPanel();
             panel = new Panel();
 
-            button.Text = Name; // Приклад встановлення тексту кнопки на основі імені вибірки
+            button.Text = Ind; // Приклад встановлення тексту кнопки на основі імені вибірки
             // Додавання обробника кліку для кнопки
             button.Click += Button_Click;
             button.MouseDown += Button_MouseDown;
@@ -88,12 +78,17 @@ namespace Lab_Statistic
             table.AutoSize = true;
             table.AutoScroll = true;
             TextBox textBox1 = new TextBox();
-            textBox1.Text = "max = " +  Math.Round(data.Max(),1).ToString() + ", min = " + Math.Round(data.Min(),1).ToString() + ", l = " + N.ToString();
+            textBox1.Text = "max = " +  Math.Round(data.Max(),1).ToString() + ", min = " + Math.Round(data.Min(),1).ToString() + ", N = " + N.ToString();
             textBox1.Size = new Size(150, 25);
             textBox1.Dock = DockStyle.Fill;
             table.Controls.Add(textBox1);
+            TextBox textBox2 = new TextBox();
+            textBox2.Text = "name = " + name;
+            textBox2.Size = new Size(85, 25);
+            textBox2.Dock = DockStyle.Fill;
+            table.Controls.Add(textBox2);
             table.RowCount = 1;
-            table.ColumnCount = N+ 2;
+            table.ColumnCount = N+ 3;
             foreach (var value in data)
             {
                 TextBox textBox = new TextBox();
