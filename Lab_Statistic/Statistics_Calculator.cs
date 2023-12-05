@@ -53,14 +53,25 @@ namespace Lab_Statistic
         }
         public static double RMS(List<double> array, int num, double average)
         {
-            List<double> array2 = new List<double>();
-            for (int i = 0; i < array.Count; i++)
-                array2.Add(Math.Pow(array[i] - average, 2));
-            double sum = Sum(array2, num);
-            double s = sum / (num - 1);
-            s = Math.Round(Math.Sqrt(s), 4);
-            return s;
+            if (num <= 1)
+            {
+                // Обробка випадку, коли розмір вибірки менший або рівний 1.
+                // Ви можете визначити, як обробляти такі ситуації.
+                return double.NaN; // або використайте іншу відповідну обробку помилок.
+            }
+
+            double sum = 0.0;
+
+            for (int i = 0; i < num; i++)
+            {
+                sum += Math.Pow(array[i] - average, 2);
+            }
+
+            double s = Math.Sqrt(sum / num); // Використовуємо num, оскільки обчислення для генеральної сукупності.
+
+            return Math.Round(s, 4);
         }
+
         public static double Mediana(List<double> array, int num)
         {
             double[] newarr = new double[num];
@@ -184,8 +195,8 @@ namespace Lab_Statistic
             List<double> array2 = new List<double>();
             for (int i = 0; i < array.Count; i++)
                 array2.Add(Math.Pow(array[i], 2) - Math.Pow(average, 2));
-            double sum = Math.Sqrt(Sum(array2, num));
-            double s = sum * num / (num - 1);
+            double sum =Sum(array2, num);
+            double s = Math.Sqrt(sum * num / (num - 1));
             s = Math.Round(s, 4);
             return s;
         }

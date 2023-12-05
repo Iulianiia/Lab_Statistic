@@ -17,7 +17,8 @@ namespace Lab_Statistic
       public static List<double> Standartarray;
       public static List<double> Logarray;
       public static List<double> WithoutAnom;
-      public static int ind = 0;
+        public static List<double> Binar;
+        public static int ind = 0;
       public static double w;
         public ContextMenu1(Button button)
         {
@@ -31,6 +32,8 @@ namespace Lab_Statistic
             ToolStripMenuItem menuItem1 = new ToolStripMenuItem("Стандартизувати");
             ToolStripMenuItem menuItem2 = new ToolStripMenuItem("Логарифмізувати");
             ToolStripMenuItem menuItem3 = new ToolStripMenuItem("Прибрати аномалії");
+            ToolStripMenuItem menuItem4 = new ToolStripMenuItem("Бінарізувати дані");
+            ToolStripMenuItem menuItem5 = new ToolStripMenuItem("Задати кільк. класів");
 
             menuItem1.Click += MenuItem_Click1;
             contextMenu.Items.Add(menuItem1);
@@ -41,6 +44,11 @@ namespace Lab_Statistic
             menuItem3.Click += MenuItem_Click3;
             contextMenu.Items.Add(menuItem3);
 
+            menuItem4.Click += MenuItem_Click4;
+            contextMenu.Items.Add(menuItem4);
+
+            menuItem5.Click += MenuItem_Click5;
+            contextMenu.Items.Add(menuItem5);
 
             button.MouseDown += Button_MouseDown;
         }
@@ -84,5 +92,27 @@ namespace Lab_Statistic
                 MenuItemClicked?.Invoke(this, EventArgs.Empty);
 
         }
+        private void MenuItem_Click4(object sender, EventArgs e)
+        {
+            double userInput = InputBox.Show("Введіть порогове значення:", "Введення числа");
+          //  MessageBox.Show("Ви ввели число: " + userInput, "Результат");
+          //  double cryt;
+           // double.TryParse(textBox.Text, out cryt);
+            Binar = Transformation.BinarizeData(SampleManager.samples[SampleManager.now_index].Data,userInput );
+            ind = 4;
+            w = SampleManager.samples[SampleManager.now_index].W;
+            MenuItemClicked?.Invoke(this, EventArgs.Empty);
+
+        }
+        private void MenuItem_Click5(object sender, EventArgs e)
+        {
+            int userInput = InputBox.Show("Введіть кількості класів:", "Введення числа");
+            SampleManager.samples[SampleManager.now_index].m = userInput;
+            SampleManager.samples[SampleManager.now_index].h = (SampleManager.samples[SampleManager.now_index].Max - SampleManager.samples[SampleManager.now_index].Min )/ userInput;
+           // MenuItemClicked?.Invoke(this, EventArgs.Empty);
+
+        }
     }
+
+
 }

@@ -40,6 +40,7 @@ namespace Lab_Statistic
 
         }
         public Characteristics s_charac { get; private set; }
+        public List<double> rangs;
 
         public List<double> Data { get;  set; }
         public double W { get; private set; }
@@ -47,9 +48,12 @@ namespace Lab_Statistic
         public int N { get; private set; }
         public double Max { get; set; }
         public double Min { get; set; }
-        public string Ind { get; set; }
+        public double h { get; set; }
+        public int m { get; set; }
+        public int Ind { get; set; }
+       
 
-        public Sample(List<double> data, double w, string ind,string name)
+        public Sample(List<double> data, double w, int ind,string name)
         {
             Characteristics characteristics = new Characteristics();
             s_charac = characteristics;
@@ -63,12 +67,14 @@ namespace Lab_Statistic
             Min = data.Min();
             Ind = ind;
 
+
+  
             // Ініціалізація контролів (кнопки, панелі і т. д.) і додавання обробника кліку
             button = new Button();
             table = new TableLayoutPanel();
             panel = new Panel();
 
-            button.Text = Ind; // Приклад встановлення тексту кнопки на основі імені вибірки
+            button.Text = Ind.ToString(); // Приклад встановлення тексту кнопки на основі імені вибірки
             // Додавання обробника кліку для кнопки
             button.Click += Button_Click;
             button.MouseDown += Button_MouseDown;
@@ -116,10 +122,14 @@ namespace Lab_Statistic
             characteristics.turn_mean = Statistics_Calculator.Truncated_Mean(Data, n, 0.3);
             characteristics.mad = Statistics_Calculator.MAD(Data, n, characteristics.median);
             characteristics.variat_coef = Statistics_Calculator.Variat_coef(Data, n, characteristics.mad);
-
+            m_h();
 
         }
-
+        private void m_h()
+        {
+            
+            (m, h) = M_H.m_h(this);
+        }
         private void Button_MouseDown(object sender, MouseEventArgs e)
         {
             if (e.Button == MouseButtons.Right)

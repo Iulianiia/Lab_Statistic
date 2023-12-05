@@ -32,9 +32,8 @@ namespace Lab_Statistic
             h = (sample1.Max - sample1.Min) / m;
             return (m, h);
         }
-        public static (int m, double h) m_h(int index)
+        public static (int m, double h) m_h(Sample sample1)
         {
-            Sample sample1 = SampleManager.samples[index];
             int m; double h;
             if (sample1.N < 100)
             {

@@ -103,6 +103,18 @@ namespace Lab_Statistic
             }
             return newarr;
         }
+        public  static List<double> BinarizeData(List<double> data, double threshold)
+        {
+            List<double> binaryData = new List<double>();
+
+            for (int i = 0; i < data.Count; i++)
+            {
+                // Якщо елемент більше або рівний пороговому значенню, присвоїти 1, інакше 0
+                binaryData.Add((data[i] >= threshold) ? 1 : 0);
+            }
+
+            return binaryData;
+        }
 
     }
 }

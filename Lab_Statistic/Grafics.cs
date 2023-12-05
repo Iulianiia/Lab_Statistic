@@ -45,8 +45,8 @@ namespace Lab_Statistic
                 N = N1;
             else
                 N = N2;
-            (int m1, double h1) = M_H.m_h(index1);
-            (int m2, double h2) = M_H.m_h(index2);
+            (int m1, double h1) =(sample1.m, sample1.h);
+            (int m2, double h2) = (sample2.m, sample2.h);
 
 
             List<PointD> points = new List<PointD>();
@@ -94,8 +94,8 @@ namespace Lab_Statistic
         {
             Sample sample1 = SampleManager.samples[index1];
             Sample sample2 = SampleManager.samples[index2];
-            (int m1, double h1) = M_H.m_h(index1);
-            (int m2, double h2) = M_H.m_h(index2);
+            (int m1, double h1) = (sample1.m, sample1.h);
+            (int m2, double h2) = (sample2.m, sample2.h);
             double aver_x = sample1.s_charac.average;
             double aver_y = sample2.s_charac.average;
             double sx = sample1.s_charac.rms;
@@ -420,7 +420,7 @@ namespace Lab_Statistic
         {
            // chart.Series.Add("fx");
             Series s = new Series() ;
-          //  s.Color = Color.Yellow; 
+            //s.Color = Color.Yellow; 
             Sample sample1 = SampleManager.samples[index1];
             Sample sample2 = SampleManager.samples[index2];
             int N1 = sample1.N;
@@ -434,7 +434,7 @@ namespace Lab_Statistic
             s.ChartType = SeriesChartType.Point;
             s.MarkerStyle = MarkerStyle.Cross; 
             s.BorderWidth = 4;
-            s.Color = Color.Yellow;
+            s.Color = Color.Red;
             for(int i =0; i< N; i++)
             {
                 s.Points.AddXY(sample1.Data[i], sample2.Data[i]);

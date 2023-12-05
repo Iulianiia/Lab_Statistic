@@ -14,5 +14,6 @@ namespace Lab_Statistic
             double t = chart.DataManipulator.Statistics.InverseTDistribution(alpha, (int)count);
             return t;
         }
+
     }
 }
