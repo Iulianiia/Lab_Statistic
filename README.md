@@ -24,3 +24,13 @@ Technologies Used:
 C#
 Windows Forms
 MathNet.Numerics Library
+
+
+How to Use:
+Execute the program.
+Import one or more-dimensional data from .txt files.
+Explore descriptive statistics, histograms, and correlation analyses for the provided data.
+Note:
+Ensure that your data is properly formatted in .txt files with columns corresponding to different variables. The program supports both one and two-dimensional data.
+
+
